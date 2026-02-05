@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SU Physiotherapy Home Service - Professional Home Care</title>
+    <link rel="stylesheet" href="css/landing.css">
+</head>
+<body>
+    <!-- Admin Link (Small) -->
+    <a href="admin-login.html" class="admin-link-small">🔐</a>
+
+    <!-- Header/Navigation -->
+    <header class="main-header">
+        <div class="container">
+            <div class="logo">
+                <h1>🏥 SU Physiotherapy</h1>
+                <p>Home Service</p>
+            </div>
+            <nav class="main-nav">
+                <a href="#home">ပင်မ</a>
+                <a href="#about">အကြောင်း</a>
+                <a href="#services">ဝန်ဆောင်မှုများ</a>
+                <a href="#contact">ဆက်သွယ်ရန်</a>
+                <a href="public-booking.html" class="btn-book-nav">📋 Booking</a>
+            </nav>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="close-menu" onclick="toggleMobileMenu()">✕</button>
+        <a href="#home" onclick="toggleMobileMenu()">ပင်မ</a>
+        <a href="#about" onclick="toggleMobileMenu()">အကြောင်း</a>
+        <a href="#services" onclick="toggleMobileMenu()">ဝန်ဆောင်မှုများ</a>
+        <a href="#contact" onclick="toggleMobileMenu()">ဆက်သွယ်ရန်</a>
+        <a href="public-booking.html" class="btn-book-mobile">📋 Booking လုပ်ရန်</a>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-overlay"></div>
+        <div class="container hero-content">
+            <h1 class="hero-title">သင့်အိမ်သို့ Physiotherapy ဝန်ဆောင်မှု</h1>
+            <p class="hero-subtitle">
+                전문적 ကုထုံး ဝန်ဆောင်မှုကို သင့်အိမ်တွင် လက်ခံရယူပါ
+            </p>
+            <div class="hero-features">
+                <div class="feature-item">
+                    <span class="feature-icon">✅</span>
+                    <span>ကျွမ်းကျင်သော Therapist များ</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🏠</span>
+                    <span>သင့်အိမ်သို့ ရောက်ရှိဝန်ဆောင်မှု</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">💯</span>
+                    <span>တစ်ဦးချင်း အထူး ဂရုစိုက်မှု</span>
+                </div>
+            </div>
+            <div class="hero-actions">
+                <a href="public-booking.html" class="btn-primary-large">
+                    📋 ချိန်းဆိုမှု လုပ်ရန်
+                </a>
+                <a href="#contact" class="btn-secondary-large">
+                    📞 ဆက်သွယ်ရန်
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>ℹ️ ကျွန်ုပ်တို့အကြောင်း</h2>
+                <p>SU Physiotherapy Home Service - သင့်ကျန်းမာရေး လမ်းဖော်</p>
+            </div>
+
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>🏥 ကျွန်ုပ်တို့၏ မျှော်မှန်းချက်</h3>
+                    <p>
+                        SU Physiotherapy သည် အရည်အသွေးမြင့် physiotherapy ဝန်ဆောင်မှုများကို 
+                        လူနာများ၏ အိမ်တွင် လက်ခံရယူနိုင်စေရန် တည်ထောင်ခဲ့ခြင်း ဖြစ်ပါသည်။ 
+                        ကျွန်ုပ်တို့၏ ကျွမ်းကျင်သော therapist များသည် နောက်ဆုံးပေါ် ကုသမှု နည်းပညာများဖြင့် 
+                        သင့်အား အကောင်းဆုံး ဝန်ဆောင်မှု ပေးအပ်ပါသည်။
+                    </p>
+
+                    <h3>🎯 ကျွန်ုပ်တို့၏ တန်ဖိုးများ</h3>
+                    <ul class="values-list">
+                        <li><strong>ကျွမ်းကျင်မှု:</strong> အတွေ့အကြုံရင့်ကျက်သော therapist များ</li>
+                        <li><strong>စိတ်ရှည်မှု:</strong> လူနာတိုင်းအား အထူး ဂရုစိုက်မှု</li>
+                        <li><strong>အဆင်ပြေမှု:</strong> သင့်အိမ်တွင် ကုသမှု ခံယူနိုင်မှု</li>
+                        <li><strong>ယုံကြည်စိတ်ချရမှု:</strong> လုံခြုံသော နှင့် ထိရောက်သော ကုသမှု</li>
+                    </ul>
+
+                    <h3>📜 လိုင်စင် နှင့် အရည်အချင်းများ</h3>
+                    <p>
+                        ကျွန်ုပ်တို့၏ therapist များသည် မြန်မာနိုင်ငံ ဆေးပညာကောင်စီမှ 
+                        အသိအမှတ်ပြု လိုင်စင်ရ ပညာရှင်များ ဖြစ်ကြပါသည်။
+                    </p>
+                </div>
+
+                <div class="about-image">
+                    <div class="stats-box">
+                        <div class="stat-item">
+                            <h3>500+</h3>
+                            <p>ကျေနပ်သော လူနာများ</p>
+                        </div>
+                        <div class="stat-item">
+                            <h3>5+</h3>
+                            <p>နှစ်ကြာ အတွေ့အကြုံ</p>
+                        </div>
+                        <div class="stat-item">
+                            <h3>95%</h3>
+                            <p>အောင်မြင်မှု နှုန်း</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>💊 ကျွန်ုပ်တို့၏ ဝန်ဆောင်မှုများ</h2>
+                <p>သင့်လိုအပ်ချက် အလိုက် အထူးပြု ကုသမှုများ</p>
+            </div>
+
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">🏥</div>
+                    <h3>ယေဘုယျ ကုထုံး</h3>
+                    <p>
+                        ခါးနာ၊ လည်ပင်းနာ၊ ပခုံးနာ စသော ယေဘုယျ ကြွက်သား 
+                        အရိုးအဆစ် ပြဿနာများ အတွက် ကုသမှု
+                    </p>
+                    <ul>
+                        <li>Manual therapy</li>
+                        <li>Exercise prescription</li>
+                        <li>Pain management</li>
+                    </ul>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">⚽</div>
+                    <h3>အားကစား ထိခိုက်မှု</h3>
+                    <p>
+                        အားကစားသမားများ၏ ဒဏ်ရာများ၊ အသင်းစွဲခြင်းများ 
+                        အမြန်ဆန် ပြန်လည်ကောင်းမွန်ရေး
+                    </p>
+                    <ul>
+                        <li>Sports injury rehabilitation</li>
+                        <li>Performance enhancement</li>
+                        <li>Injury prevention</li>
+                    </ul>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">🦴</div>
+                    <h3>အရိုးအဆစ် ကုထုံး</h3>
+                    <p>
+                        အရိုးကျိုး၊ အဆစ်ပြဿနာ၊ ခွဲစိတ်ပြီး ပြန်လည်ကောင်းမွန်ရေး 
+                        အတွက် အထူးပြု ကုသမှု
+                    </p>
+                    <ul>
+                        <li>Post-fracture rehabilitation</li>
+                        <li>Joint mobilization</li>
+                        <li>Post-surgical care</li>
+                    </ul>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">🧠</div>
+                    <h3>အာရုံကြော ကုထုံး</h3>
+                    <p>
+                        လေဖြတ်ခြင်း၊ ဦးနှောက်ထိခိုက်မှု၊ အာရုံကြောဆိုင်ရာ 
+                        ပြဿနာများ အတွက် ပြန်လည်ထူထောင်ရေး
+                    </p>
+                    <ul>
+                        <li>Stroke rehabilitation</li>
+                        <li>Balance training</li>
+                        <li>Neurological conditions</li>
+                    </ul>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">👴</div>
+                    <h3>သက်ကြီးရွယ်အို ကုထုံး</h3>
+                    <p>
+                        သက်ကြီးရွယ်အို များ၏ အရိုးအဆစ်နာ၊ ချိန်ခွင်လျှာမညီမှု 
+                        စသော ပြဿနာများ ကုသခြင်း
+                    </p>
+                    <ul>
+                        <li>Arthritis management</li>
+                        <li>Fall prevention</li>
+                        <li>Mobility improvement</li>
+                    </ul>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">🤰</div>
+                    <h3>ကိုယ်ဝန်ဆောင် ကုထုံး</h3>
+                    <p>
+                        ကိုယ်ဝန်ဆောင်များ၏ နောက်ကျောနာ၊ တင်ပဆုံနာ 
+                        နှင့် မွေးပြီး ပြန်လည်ကောင်းမွန်ရေး
+                    </p>
+                    <ul>
+                        <li>Prenatal care</li>
+                        <li>Postnatal rehabilitation</li>
+                        <li>Pelvic floor therapy</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <h2>📱 မည်သို့ အလုပ်လုပ်သလဲ?</h2>
+                <p>အလွယ်တကူ ၃ ဆင့်ဖြင့် ဝန်ဆောင်မှု ရယူပါ</p>
+            </div>
+
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>📋 Booking လုပ်ပါ</h3>
+                    <p>
+                        Website မှ သို့မဟုတ် ဖုန်းဖြင့် ချိန်းဆိုမှု လုပ်ပါ။ 
+                        သင့်အတွက် အဆင်ပြေသော ရက်စွဲနှင့် အချိန် ရွေးပါ။
+                    </p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>✅ အတည်ပြုမှု</h3>
+                    <p>
+                        ကျွန်ုပ်တို့မှ သင့် booking ကို အတည်ပြုပြီး 
+                        therapist အချက်အလက်များ ပေးပို့ပါမည်။
+                    </p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>🏠 ကုသမှု ခံယူပါ</h3>
+                    <p>
+                        ကျွမ်းကျင်သော therapist သည် သင့်အိမ်သို့ ရောက်ရှိပြီး 
+                        အရည်အသွေးမြင့် ကုသမှု ပေးအပ်ပါမည်။
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>📞 ဆက်သွယ်ရန်</h2>
+                <p>မေးခွန်းများ ရှိပါက စိတ်ချပြီး ဆက်သွယ်ပါ</p>
+            </div>
+
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">📱</div>
+                        <div class="contact-details">
+                            <h4>ဖုန်းနံပါတ်</h4>
+                            <p>09-XXX-XXX-XXX</p>
+                            <p>09-YYY-YYY-YYY</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">📧</div>
+                        <div class="contact-details">
+                            <h4>အီးမေးလ်</h4>
+                            <p>info@suphysio.com</p>
+                            <p>booking@suphysio.com</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">📍</div>
+                        <div class="contact-details">
+                            <h4>ဝန်ဆောင်မှု ဧရိယာ</h4>
+                            <p>ရန်ကုန်မြို့ နှင့် အနီးတစ်ဝိုက်</p>
+                            <p>မန္တလေးမြို့ (မကြာမီ)</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">🕐</div>
+                        <div class="contact-details">
+                            <h4>ဝန်ဆောင်မှု အချိန်</h4>
+                            <p>တနင်္လာ - စနေ: 8:00 AM - 6:00 PM</p>
+                            <p>တနင်္ဂနွေ: 9:00 AM - 3:00 PM</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-cta">
+                    <div class="cta-box">
+                        <h3>🎉 ယနေ့ပဲ စတင်ပါ!</h3>
+                        <p>
+                            သင့်အတွက် အဆင်ပြေသော အချိန်တွင် 
+                            ကျန်းမာရေး ဝန်ဆောင်မှု ရယူပါ
+                        </p>
+                        <a href="public-booking.html" class="btn-cta">
+                            📋 ချိန်းဆိုမှု လုပ်ရန်
+                        </a>
+                        <p class="cta-note">
+                            ⚡ အမြန် တုံ့ပြန်မှု - 24 နာရီအတွင်း အတည်ပြုမှု
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>🏥 SU Physiotherapy</h3>
+                    <p>
+                        အရည်အသွေးမြင့် physiotherapy ဝန်ဆောင်မှုကို 
+                        သင့်အိမ်တွင် လက်ခံရယူပါ။
+                    </p>
+                </div>
+
+                <div class="footer-section">
+                    <h4>အမြန်လင့်များ</h4>
+                    <ul>
+                        <li><a href="#home">ပင်မ</a></li>
+                        <li><a href="#about">အကြောင်း</a></li>
+                        <li><a href="#services">ဝန်ဆောင်မှုများ</a></li>
+                        <li><a href="public-booking.html">Booking</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>ဝန်ဆောင်မှုများ</h4>
+                    <ul>
+                        <li>ယေဘုယျ ကုထုံး</li>
+                        <li>အားကစား ထိခိုက်မှု</li>
+                        <li>အရိုးအဆစ် ကုထုံး</li>
+                        <li>အာရုံကြော ကုထုံး</li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>ဆက်သွယ်ရန်</h4>
+                    <p>📞 09-XXX-XXX-XXX</p>
+                    <p>📧 info@suphysio.com</p>
+                    <p>📍 ရန်ကုန်မြို့</p>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 SU Physiotherapy Home Service. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="admin-login.html">Admin</a>
+                    <span>|</span>
+                    <a href="#contact">Privacy Policy</a>
+                    <span>|</span>
+                    <a href="#contact">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-to-top" id="scrollToTop" onclick="scrollToTop()">
+        ↑
+    </button>
+
+    <script>
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('active');
+        }
+
+        // Scroll to Top
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Show/Hide Scroll to Top Button
+        window.addEventListener('scroll', function() {
+            const scrollBtn = document.getElementById('scrollToTop');
+            if (window.scrollY > 300) {
+                scrollBtn.classList.add('show');
+            } else {
+                scrollBtn.classList.remove('show');
+            }
+        });
+
+        // Smooth Scroll for Anchor Links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking - SU Physiotherapy</title>
+    <link rel="stylesheet" href="css/public-booking.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="public-header">
+        <div class="container">
+            <div class="logo">
+                <h1>🏥 SU Physiotherapy</h1>
+                <p>Home Service</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        
+        <!-- Welcome Section -->
+        <section class="welcome-section">
+            <h2>📋 ချိန်းဆိုမှု လုပ်ရန်</h2>
+            <p>သင့်အိမ်သို့ ကုထုံး ဝန်ဆောင်မှု ရယူရန် အချိန်ဇယား ချိန်းဆိုပါ။</p>
+        </section>
+
+        <!-- Tab Navigation -->
+        <div class="tab-nav">
+            <button class="tab-btn active" data-tab="new-booking">
+                ➕ အသစ် Booking
+            </button>
+            <button class="tab-btn" data-tab="check-status">
+                🔍 Status စစ်ဆေးရန်
+            </button>
+        </div>
+
+        <!-- New Booking Tab -->
+        <section id="new-booking" class="tab-content active">
+            <div class="booking-card">
+                <h3>📝 Booking Form</h3>
+                
+                <form id="public-booking-form">
+                    <div class="form-group">
+                        <label>အမည် *</label>
+                        <input type="text" id="pub-name" required placeholder="သင့်အမည် ဖြည့်ပါ">
+                    </div>
+
+                    <div class="form-group">
+                        <label>ဖုန်းနံပါတ် *</label>
+                        <input type="tel" id="pub-phone" required placeholder="09xxxxxxxxx" pattern="[0-9]{9,11}">
+                        <small>ဥပမာ: 09123456789</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>လိပ်စာ *</label>
+                        <textarea id="pub-address" rows="2" required placeholder="အိမ်လိပ်စာ အပြည့်အစုံ ဖြည့်ပါ"></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>ရက်စွဲ *</label>
+                            <input type="date" id="pub-date" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>အချိန် *</label>
+                            <select id="pub-time" required>
+                                <option value="">ရွေးပါ</option>
+                                <option value="08:00">08:00 AM</option>
+                                <option value="08:30">08:30 AM</option>
+                                <option value="09:00">09:00 AM</option>
+                                <option value="09:30">09:30 AM</option>
+                                <option value="10:00">10:00 AM</option>
+                                <option value="10:30">10:30 AM</option>
+                                <option value="11:00">11:00 AM</option>
+                                <option value="11:30">11:30 AM</option>
+                                <option value="12:00">12:00 PM</option>
+                                <option value="13:00">01:00 PM</option>
+                                <option value="13:30">01:30 PM</option>
+                                <option value="14:00">02:00 PM</option>
+                                <option value="14:30">02:30 PM</option>
+                                <option value="15:00">03:00 PM</option>
+                                <option value="15:30">03:30 PM</option>
+                                <option value="16:00">04:00 PM</option>
+                                <option value="16:30">04:30 PM</option>
+                                <option value="17:00">05:00 PM</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>ကုသမှု အမျိုးအစား *</label>
+                        <select id="pub-treatment" required>
+                            <option value="">ရွေးပါ</option>
+                            <option value="general">ယေဘုယျ ကုထုံး</option>
+                            <option value="sports">အားကစား ထိခိုက်မှု</option>
+                            <option value="orthopedic">အရိုးအဆစ်</option>
+                            <option value="neuro">အာရုံကြော</option>
+                            <option value="geriatric">သက်ကြီးရွယ်အို</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>ရောဂါ လက္ခဏာ / မှတ်ချက်</label>
+                        <textarea id="pub-notes" rows="3" placeholder="သင့်ရောဂါ လက္ခဏာ သို့မဟုတ် အထူး မှတ်ချက် ရှိပါက ဖော်ပြပါ"></textarea>
+                    </div>
+
+                    <div class="form-notice">
+                        <p>⚠️ <strong>သတိပြုရန်:</strong></p>
+                        <ul>
+                            <li>Booking ပြုလုပ်ပြီးပါက Booking Code ရရှိပါမည်</li>
+                            <li>Admin မှ အတည်ပြုပြီးမှ အချိန်ဇယား သတ်မှတ်ပါမည်</li>
+                            <li>Booking Code ဖြင့် status စစ်ဆေးနိုင်ပါသည်</li>
+                        </ul>
+                    </div>
+
+                    <button type="submit" class="btn-submit">
+                        📝 Booking လုပ်မည်
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Check Status Tab -->
+        <section id="check-status" class="tab-content">
+            <div class="booking-card">
+                <h3>🔍 Booking Status စစ်ဆေးရန်</h3>
+                
+                <form id="check-status-form">
+                    <div class="form-group">
+                        <label>Booking Code *</label>
+                        <input type="text" id="booking-code" required placeholder="SU-2026-XXX" style="text-transform: uppercase;">
+                        <small>ဥပမာ: SU-2026-001</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>ဖုန်းနံပါတ် *</label>
+                        <input type="tel" id="verify-phone" required placeholder="09xxxxxxxxx" pattern="[0-9]{9,11}">
+                        <small>Booking လုပ်စက သုံးခဲ့သော ဖုန်းနံပါတ်</small>
+                    </div>
+
+                    <button type="submit" class="btn-submit">
+                        🔍 စစ်ဆေးမည်
+                    </button>
+                </form>
+
+                <!-- Status Result -->
+                <div id="status-result" class="status-result hidden">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Success Modal -->
+        <div id="success-modal" class="modal">
+            <div class="modal-content success-content">
+                <div class="success-icon">✅</div>
+                <h2>Booking အောင်မြင်ပါသည်!</h2>
+                
+                <div class="booking-info">
+                    <p><strong>Booking Code:</strong></p>
+                    <div class="booking-code-display" id="display-booking-code">SU-2026-XXX</div>
+                    
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="label">အမည်:</span>
+                            <span class="value" id="display-name"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">ရက်စွဲ:</span>
+                            <span class="value" id="display-date"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">အချိန်:</span>
+                            <span class="value" id="display-time"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="important-notice">
+                    <p>⚠️ <strong>အရေးကြီး:</strong></p>
+                    <ul>
+                        <li>Booking Code ကို သိမ်းဆည်းထားပါ</li>
+                        <li>Status စစ်ဆေးရန် ဤ code ကို အသုံးပြုပါမည်</li>
+                        <li>Admin မှ မကြာမီ ဆက်သွယ်ပါမည်</li>
+                    </ul>
+                </div>
+
+                <div class="modal-actions">
+                    <button onclick="copyBookingCode()" class="btn-copy">
+                        📋 Code ကူးယူရန်
+                    </button>
+                    <button onclick="closeSuccessModal()" class="btn-close">
+                        ပိတ်မည်
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="public-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>📞 ဆက်သွယ်ရန်</h4>
+                    <p>ဖုန်း: 09-XXX-XXX-XXX</p>
+                    <p>အီးမေးလ်: info@suphysio.com</p>
+                </div>
+                <div class="footer-section">
+                    <h4>🕐 ဝန်ဆောင်မှု အချိန်</h4>
+                    <p>တနင်္လာ - စနေ</p>
+                    <p>8:00 AM - 5:00 PM</p>
+                </div>
+                <div class="footer-section">
+                    <h4>📍 ဧရိယာ</h4>
+                    <p>ရန်ကုန်မြို့ နှင့်</p>
+                    <p>အနီးတစ်ဝိုက်</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 SU Physiotherapy. All rights reserved.</p>
+                <a href="index.html" class="admin-link">🔐 Admin Login</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/public-booking.js"></script>
+</body>
+</html>
