@@ -526,8 +526,7 @@ async function sendPublicBookingNotification(patient) {
 
 🔔 ကျေးဇူးပြု၍ အတည်ပြုပေးပါ။
     `.trim();
-    
-    try {
+try {
         await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -542,7 +541,6 @@ async function sendPublicBookingNotification(patient) {
         console.error('❌ Telegram error:', error);
     }
 }
-
 async function sendCancellationNotification(patient) {
     const botToken = localStorage.getItem('telegram_bot_token');
     const chatId = localStorage.getItem('telegram_chat_id');
@@ -562,7 +560,6 @@ ${patient.cancelReason}
 
 ⏰ <b>ပယ်ဖျက်ချိန်:</b> ${new Date().toLocaleString('my-MM')}
     `.trim();
-    
     try {
         await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
             method: 'POST',
@@ -600,7 +597,6 @@ function formatDateMM(dateString) {
 // ========================================
 function showWelcomeBack(booking) {
     const checkStatusSection = document.getElementById('check-status');
-    
     if (checkStatusSection) {
         const existingWelcome = checkStatusSection.querySelector('.welcome-back-message');
         if (existingWelcome) {
@@ -608,7 +604,6 @@ function showWelcomeBack(booking) {
         }
         
         const statusForm = document.getElementById('check-status-form');
-        
         const welcomeMsg = document.createElement('div');
         welcomeMsg.className = 'welcome-back-message';
         welcomeMsg.innerHTML = `
@@ -620,7 +615,6 @@ function showWelcomeBack(booking) {
                 </button>
             </div>
         `;
-        
         if (statusForm) {
             checkStatusSection.insertBefore(welcomeMsg, statusForm);
             statusForm.style.display = 'none';
@@ -635,7 +629,6 @@ function checkDifferentBooking() {
     const statusForm = document.getElementById('check-status-form');
     const welcomeMsg = document.querySelector('.welcome-back-message');
     const statusResult = document.getElementById('status-result');
-    
     if (welcomeMsg) welcomeMsg.remove();
     if (statusForm) statusForm.style.display = 'block';
     if (statusResult) statusResult.classList.add('hidden');
@@ -657,4 +650,5 @@ function clearSavedBooking() {
 // ========================================
 // Export
 // ========================================
-console.log('✅ Public Booking JS loaded');#2D60A8
+console.log('✅ Public Booking JS loaded');
+
