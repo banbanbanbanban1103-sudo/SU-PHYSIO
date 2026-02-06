@@ -101,35 +101,11 @@ function loadPatients() {
     const saved = localStorage.getItem('su_patients');
     if (saved) {
         patients = JSON.parse(saved);
+        console.log('📦 Loaded patients from localStorage:', patients.length);
     } else {
-        // Sample data for testing
-        patients = [
-            {
-                id: Date.now() + 1,
-                name: 'မောင်မောင်',
-                phone: '09123456789',
-                address: 'ရန်ကုန်မြို့',
-                date: '2026-02-05',
-                time: '09:00',
-                treatment: 'general',
-                notes: 'ခါးနာ ကုသရန်',
-                status: 'confirmed',
-                createdAt: new Date().toISOString()
-            },
-            {
-                id: Date.now() + 2,
-                name: 'မမမ',
-                phone: '09987654321',
-                address: 'မန္တလေး',
-                date: '2026-02-06',
-                time: '14:00',
-                treatment: 'sports',
-                notes: 'ခြေထောက် ထိခိုက်မှု',
-                status: 'pending',
-                createdAt: new Date().toISOString()
-            }
-        ];
-        savePatients();
+        // No data yet - start with empty array
+        patients = [];
+        console.log('📋 No existing patients, starting fresh');
     }
 }
 
@@ -372,7 +348,15 @@ function viewPatient(patientId) {
     
     // Populate modal
     const detailsDiv = document.getElementById('patient-details');
+    
+    // Check if this is a public booking
+    const isPublic = patient.source === 'public';
+    const bookingCodeHtml = patient.bookingCode ? `<p><strong>🔖 Booking Code:</strong> ${patient.bookingCode}</p>` : '';
+    const sourceHtml = isPublic ? `<p><strong>🌐 Source:</strong> <span style="color: #2563eb; font-weight: 500;">Public Website</span></p>` : '';
+    
     detailsDiv.innerHTML = `
+        ${bookingCodeHtml}
+        ${sourceHtml}
         <p><strong>📛 အမည်:</strong> ${patient.name}</p>
         <p><strong>📞 ဖုန်း:</strong> ${patient.phone}</p>
         <p><strong>📍 လိပ်စာ:</strong> ${patient.address || 'မရှိ'}</p>
