@@ -120,6 +120,8 @@ function initPublicBookingForm() {
 }
 
 function handlePublicBooking() {
+    console.log('🔵 handlePublicBooking called');
+    
     // Get form values
     const name = document.getElementById('pub-name').value.trim();
     const phone = document.getElementById('pub-phone').value.trim();
@@ -129,20 +131,27 @@ function handlePublicBooking() {
     const treatment = document.getElementById('pub-treatment').value;
     const notes = document.getElementById('pub-notes').value.trim();
     
+    console.log('📋 Form values:', { name, phone, address, date, time, treatment });
+    
     // Validate
     if (!name || !phone || !address || !date || !time || !treatment) {
+        console.log('❌ Validation failed');
         alert('⚠️ ကျေးဇူးပြု၍ လိုအပ်သော အချက်အလက်များကို ဖြည့်ပါ');
         return;
     }
     
     // Validate phone number
     if (phone.length < 9 || phone.length > 11) {
+        console.log('❌ Phone validation failed');
         alert('⚠️ ဖုန်းနံပါတ် မှန်ကန်ပါစေ (09xxxxxxxxx)');
         return;
     }
     
+    console.log('✅ Validation passed');
+    
     // Generate booking code
     const bookingCode = generateBookingCode();
+    console.log('🔢 Generated booking code:', bookingCode);
     
     // Create patient object
     const newPatient = {
@@ -163,18 +172,23 @@ function handlePublicBooking() {
         source: 'public' // Mark as public booking
     };
     
+    console.log('👤 New patient object:', newPatient);
+    
     // Get existing patients from localStorage
     let patients = [];
     const saved = localStorage.getItem('su_patients');
     if (saved) {
         patients = JSON.parse(saved);
+        console.log('📦 Loaded existing patients:', patients.length);
     }
     
     // Add new patient
     patients.push(newPatient);
+    console.log('➕ Added new patient, total:', patients.length);
     
     // Save to localStorage
     localStorage.setItem('su_patients', JSON.stringify(patients));
+    console.log('💾 Saved to localStorage');
     
     // Save to Session Storage for auto-login next time
     sessionStorage.setItem('su_booking_code', bookingCode);
@@ -184,19 +198,23 @@ function handlePublicBooking() {
     console.log('💾 Saved to session storage for auto-login');
     
     // Send Telegram notification
+    console.log('📱 Sending Telegram notification...');
     sendPublicBookingNotification(newPatient);
     
     // Show success modal
+    console.log('🎉 Showing success modal...');
     showSuccessModal(newPatient);
     
     // Reset form
     document.getElementById('public-booking-form').reset();
+    console.log('🔄 Form reset');
     
     // Reset date to tomorrow
     const today = new Date();
     const tomorrow = new Date(today);
     tomorrow.setDate(today.getDate() + 1);
     document.getElementById('pub-date').value = tomorrow.toISOString().split('T')[0];
+    console.log('✅ Booking process complete!');
 }
 
 // ========================================
@@ -526,7 +544,8 @@ async function sendPublicBookingNotification(patient) {
 
 🔔 ကျေးဇူးပြု၍ အတည်ပြုပေးပါ။
     `.trim();
-try {
+    
+    try {
         await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -541,6 +560,7 @@ try {
         console.error('❌ Telegram error:', error);
     }
 }
+
 async function sendCancellationNotification(patient) {
     const botToken = localStorage.getItem('telegram_bot_token');
     const chatId = localStorage.getItem('telegram_chat_id');
@@ -560,6 +580,7 @@ ${patient.cancelReason}
 
 ⏰ <b>ပယ်ဖျက်ချိန်:</b> ${new Date().toLocaleString('my-MM')}
     `.trim();
+    
     try {
         await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
             method: 'POST',
@@ -597,6 +618,7 @@ function formatDateMM(dateString) {
 // ========================================
 function showWelcomeBack(booking) {
     const checkStatusSection = document.getElementById('check-status');
+    
     if (checkStatusSection) {
         const existingWelcome = checkStatusSection.querySelector('.welcome-back-message');
         if (existingWelcome) {
@@ -604,6 +626,7 @@ function showWelcomeBack(booking) {
         }
         
         const statusForm = document.getElementById('check-status-form');
+        
         const welcomeMsg = document.createElement('div');
         welcomeMsg.className = 'welcome-back-message';
         welcomeMsg.innerHTML = `
@@ -615,6 +638,7 @@ function showWelcomeBack(booking) {
                 </button>
             </div>
         `;
+        
         if (statusForm) {
             checkStatusSection.insertBefore(welcomeMsg, statusForm);
             statusForm.style.display = 'none';
@@ -629,6 +653,7 @@ function checkDifferentBooking() {
     const statusForm = document.getElementById('check-status-form');
     const welcomeMsg = document.querySelector('.welcome-back-message');
     const statusResult = document.getElementById('status-result');
+    
     if (welcomeMsg) welcomeMsg.remove();
     if (statusForm) statusForm.style.display = 'block';
     if (statusResult) statusResult.classList.add('hidden');
@@ -651,4 +676,3 @@ function clearSavedBooking() {
 // Export
 // ========================================
 console.log('✅ Public Booking JS loaded');
-
