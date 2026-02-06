@@ -48,9 +48,14 @@ function checkSavedBooking() {
 }
 
 function autoLoadBooking(bookingCode, phone) {
+    console.log('🔍 Auto-loading booking:', bookingCode);
+    
     // Get patients from localStorage
     const saved = localStorage.getItem('su_patients');
-    if (!saved) return;
+    if (!saved) {
+        console.log('⚠️ No patients in localStorage');
+        return;
+    }
     
     const patients = JSON.parse(saved);
     
@@ -61,19 +66,25 @@ function autoLoadBooking(bookingCode, phone) {
     
     if (!booking) {
         // Booking not found - clear saved data
+        console.log('❌ Booking not found, clearing session');
         sessionStorage.removeItem('su_booking_code');
         sessionStorage.removeItem('su_booking_phone');
         return;
     }
     
+    console.log('✅ Booking found:', booking);
+    
     // Switch to check status tab
     switchTab('check-status');
     
-    // Show welcome message
-    showWelcomeBack(booking);
-    
-    // Show booking status
-    showBookingStatus(booking);
+    // Wait for DOM to be ready
+    setTimeout(() => {
+        // Show welcome message
+        showWelcomeBack(booking);
+        
+        // Show booking status
+        showBookingStatus(booking);
+    }, 100);
 }
 
 // ========================================
@@ -617,33 +628,44 @@ function formatDateMM(dateString) {
 // Show Welcome Back Message
 // ========================================
 function showWelcomeBack(booking) {
+    console.log('👋 Showing welcome back message for:', booking.name);
+    
     const checkStatusSection = document.getElementById('check-status');
     
-    if (checkStatusSection) {
-        const existingWelcome = checkStatusSection.querySelector('.welcome-back-message');
-        if (existingWelcome) {
-            existingWelcome.remove();
-        }
-        
-        const statusForm = document.getElementById('check-status-form');
-        
-        const welcomeMsg = document.createElement('div');
-        welcomeMsg.className = 'welcome-back-message';
-        welcomeMsg.innerHTML = `
-            <div style="background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 20px; border-radius: 12px; margin-bottom: 25px; text-align: center; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);">
-                <h3 style="margin: 0 0 10px 0; font-size: 22px;">👋 မင်္ဂလာပါ, ${booking.name}!</h3>
-                <p style="margin: 0 0 15px 0; opacity: 0.95; font-size: 15px;">သင့် Booking အား အလိုအလျောက် ရှာတွေ့ပါသည်</p>
-                <button onclick="checkDifferentBooking()" style="background: white; color: #059669; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: 500; font-size: 14px;">
-                    🔍 အခြား Booking ကြည့်မည်
-                </button>
-            </div>
-        `;
-        
-        if (statusForm) {
-            checkStatusSection.insertBefore(welcomeMsg, statusForm);
-            statusForm.style.display = 'none';
-        }
+    if (!checkStatusSection) {
+        console.error('❌ check-status section not found');
+        return;
     }
+    
+    // Remove existing welcome message if any
+    const existingWelcome = checkStatusSection.querySelector('.welcome-back-message');
+    if (existingWelcome) {
+        existingWelcome.remove();
+    }
+    
+    // Create welcome message
+    const welcomeMsg = document.createElement('div');
+    welcomeMsg.className = 'welcome-back-message';
+    welcomeMsg.innerHTML = `
+        <div style="background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 20px; border-radius: 12px; margin-bottom: 25px; text-align: center; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);">
+            <h3 style="margin: 0 0 10px 0; font-size: 22px;">👋 မင်္ဂလာပါ, ${booking.name}!</h3>
+            <p style="margin: 0 0 15px 0; opacity: 0.95; font-size: 15px;">သင့် Booking အား အလိုအလျောက် ရှာတွေ့ပါသည်</p>
+            <button onclick="checkDifferentBooking()" style="background: white; color: #059669; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: 500; font-size: 14px;">
+                🔍 အခြား Booking ကြည့်မည်
+            </button>
+        </div>
+    `;
+    
+    // Insert at the beginning of check-status section
+    checkStatusSection.insertBefore(welcomeMsg, checkStatusSection.firstChild);
+    
+    // Hide the status check form
+    const statusForm = document.getElementById('check-status-form');
+    if (statusForm) {
+        statusForm.style.display = 'none';
+    }
+    
+    console.log('✅ Welcome message displayed');
 }
 
 // ========================================
