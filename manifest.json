@@ -2,7 +2,7 @@
   "name": "SU Physiotherapy Home Service",
   "short_name": "SU Physio",
   "description": "Professional physiotherapy home service in Myanmar",
-  "start_url": "/index.html",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2563eb",
