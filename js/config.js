@@ -8,11 +8,11 @@ const GOOGLE_SHEETS_CONFIG = {
     
     // Web App URL from Apps Script deployment
     // Format: https://script.google.com/macros/s/AKfycby.../exec
-    WEB_APP_URL: 'YOUR_WEB_APP_URL_HERE',
+    WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbznY6qKQA43DqFabxzqOt13lR6OQER5MWPIjCkj6a0WGqtW1plN13hVMwGU1DrxAn-JiA/exec',
     
     // Google Sheet ID from the URL
     // Format: 1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms
-    SHEET_ID: 'YOUR_SHEET_ID_HERE',
+    SHEET_ID: '1JaeyuyiAniAnneNpeyIFXpp9nLUFihjD6UZWAotIhMs',
     
     // Enable/disable features
     USE_SHEETS: true,           // true = Use Google Sheets, false = Use localStorage
