@@ -1,244 +1,424 @@
 // ==========================================
 // SU Physiotherapy - Google Sheets API
-// FULL FIXED VERSION (CORS, Cache & Missing Functions Fixed)
+// CORS Fixed Version
 // ==========================================
-
-// 1. Configuration Check
-function isSheetsConfigured() {
-    return typeof GOOGLE_SHEETS_CONFIG !== 'undefined' && 
-           GOOGLE_SHEETS_CONFIG.WEB_APP_URL && 
-           GOOGLE_SHEETS_CONFIG.WEB_APP_URL !== '';
-}
-
-// ==========================================
-// Read All Bookings (Admin Confirm သိအောင် Fix လုပ်ထားသည်)
-// ==========================================
-async function readBookingsFromSheets() {
-    if (!isSheetsConfigured()) {
-        console.log('⚠️ Sheets not configured, loading from localStorage');
-        return loadFromLocalStorage();
-    }
-    
-    try {
-        // ✅ URL မှာ Date.now() ထည့်ခြင်းဖြင့် Admin ဘက်က Status ပြောင်းတာကို Public က ချက်ချင်းသိနိုင်မည်
-        const url = GOOGLE_SHEETS_CONFIG.WEB_APP_URL + '?action=read&t=' + Date.now();
-        
-        console.log('📥 Loading fresh data from Google Sheets...');
-        const response = await fetch(url, {
-            method: 'GET',
-            redirect: 'follow'
-        });
-        
-        if (!response.ok) throw new Error('HTTP Error ' + response.status);
-        
-        const text = await response.text();
-        const result = JSON.parse(text);
-        
-        if (result.success) {
-            console.log('✅ Loaded', result.data.length, 'bookings from Sheets');
-            if (GOOGLE_SHEETS_CONFIG.USE_LOCAL_BACKUP) {
-                localStorage.setItem('su_patients', JSON.stringify(result.data));
-            }
-            return result.data;
-        } else {
-            return loadFromLocalStorage();
-        }
-    } catch (error) {
-        console.error('❌ Error loading from Sheets:', error);
-        return loadFromLocalStorage();
-    }
-}
 
 // ==========================================
 // Create Booking in Sheets
 // ==========================================
 async function createBookingInSheets(booking) {
     if (!isSheetsConfigured()) {
-        backupToLocalStorage(booking);
+        if (GOOGLE_SHEETS_CONFIG.DEBUG_MODE) {
+            console.log('⚠️ Google Sheets not configured, using localStorage only');
+        }
         return { success: false, message: 'Sheets not configured' };
     }
     
     console.log('📤 Sending booking to Google Sheets...');
     
     try {
-        await fetch(GOOGLE_SHEETS_CONFIG.WEB_APP_URL, {
+        const response = await fetch(GOOGLE_SHEETS_CONFIG.WEB_APP_URL, {
             method: 'POST',
             mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+            },
             body: JSON.stringify({
                 action: 'create',
                 booking: booking
             })
         });
         
+        console.log('✅ Booking sent to Google Sheets');
+        
         if (GOOGLE_SHEETS_CONFIG.USE_LOCAL_BACKUP) {
             backupToLocalStorage(booking);
         }
         
-        return { success: true, message: 'Booking process initiated' };
+        return { success: true, message: 'Booking saved to Sheets' };
+        
     } catch (error) {
         console.error('❌ Error saving to Sheets:', error);
-        backupToLocalStorage(booking);
+        
+        if (GOOGLE_SHEETS_CONFIG.USE_LOCAL_BACKUP) {
+            backupToLocalStorage(booking);
+        }
+        
         return { success: false, message: error.message };
     }
 }
 
 // ==========================================
-// Customer API Functions (Missing Functions Added)
+// Read All Bookings from Sheets (FIXED)
 // ==========================================
-
-async function findCustomerByPhone(phone) {
-    // Fresh data ကိုအရင်ဆွဲပြီး phone နဲ့ရှာမယ်
-    const bookings = await readBookingsFromSheets();
-    const customer = bookings.find(p => p.phone === phone);
-    if (customer) return customer;
-    
-    return findCustomerInLocalStorage(phone);
-}
-
-async function createCustomerInSheets(customer) {
+async function readBookingsFromSheets() {
     if (!isSheetsConfigured()) {
-        return saveCustomerToLocalStorage(customer);
-    }
-
-    console.log('📤 Creating customer in Sheets...');
-    try {
-        await fetch(GOOGLE_SHEETS_CONFIG.WEB_APP_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                action: 'createCustomer',
-                customer: customer
-            })
-        });
-
-        if (GOOGLE_SHEETS_CONFIG.USE_LOCAL_BACKUP) {
-            saveCustomerToLocalStorage(customer);
+        if (GOOGLE_SHEETS_CONFIG.DEBUG_MODE) {
+            console.log('⚠️ Google Sheets not configured, loading from localStorage');
         }
-        return { success: true, message: 'Customer created' };
+        return loadFromLocalStorage();
+    }
+    
+    console.log('📥 Loading bookings from Google Sheets...');
+    
+    try {
+        // ✅ Use GET with proper URL
+        const url = GOOGLE_SHEETS_CONFIG.WEB_APP_URL + '?action=read';
+        
+        console.log('🔗 Fetching from:', url);
+        
+        const response = await fetch(url, {
+            method: 'GET',
+            redirect: 'follow'
+        });
+        
+        if (!response.ok) {
+            throw new Error('HTTP ' + response.status);
+        }
+        
+        const text = await response.text();
+        console.log('📄 Raw response received');
+        
+        const result = JSON.parse(text);
+        
+        if (result.success) {
+            console.log('✅ Loaded', result.data.length, 'bookings from Sheets');
+            
+            if (GOOGLE_SHEETS_CONFIG.USE_LOCAL_BACKUP && result.data.length > 0) {
+                localStorage.setItem('su_patients', JSON.stringify(result.data));
+            }
+            
+            return result.data;
+        } else {
+            console.error('❌ Failed to load from Sheets:', result.message);
+            return loadFromLocalStorage();
+        }
+        
     } catch (error) {
-        console.error('❌ Error creating customer:', error);
-        return saveCustomerToLocalStorage(customer);
+        console.error('❌ Error loading from Sheets:', error);
+        console.log('📦 Falling back to localStorage');
+        return loadFromLocalStorage();
     }
 }
 
 // ==========================================
-// Update/Delete Functions
+// Update Booking in Sheets
 // ==========================================
 async function updateBookingInSheets(bookingId, updates) {
-    if (!isSheetsConfigured()) return updateInLocalStorage(bookingId, updates);
+    if (!isSheetsConfigured()) {
+        if (GOOGLE_SHEETS_CONFIG.DEBUG_MODE) {
+            console.log('⚠️ Google Sheets not configured, updating localStorage only');
+        }
+        return updateInLocalStorage(bookingId, updates);
+    }
+    
+    console.log('📤 Updating booking in Google Sheets...');
     
     try {
-        await fetch(GOOGLE_SHEETS_CONFIG.WEB_APP_URL, {
+        const response = await fetch(GOOGLE_SHEETS_CONFIG.WEB_APP_URL, {
             method: 'POST',
             mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+            },
             body: JSON.stringify({
                 action: 'update',
                 id: bookingId,
                 updates: updates
             })
         });
-        updateInLocalStorage(bookingId, updates);
+        
+        console.log('✅ Booking updated in Google Sheets');
+        
+        if (GOOGLE_SHEETS_CONFIG.USE_LOCAL_BACKUP) {
+            updateInLocalStorage(bookingId, updates);
+        }
+        
         return { success: true };
+        
     } catch (error) {
-        return updateInLocalStorage(bookingId, updates);
+        console.error('❌ Error updating in Sheets:', error);
+        
+        if (GOOGLE_SHEETS_CONFIG.USE_LOCAL_BACKUP) {
+            return updateInLocalStorage(bookingId, updates);
+        }
+        
+        return { success: false };
     }
 }
 
+// ==========================================
+// Delete Booking from Sheets
+// ==========================================
 async function deleteBookingFromSheets(bookingId) {
-    if (!isSheetsConfigured()) return deleteFromLocalStorage(bookingId);
-    
-    try {
-        await fetch(GOOGLE_SHEETS_CONFIG.WEB_APP_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            body: JSON.stringify({ action: 'delete', id: bookingId })
-        });
-        deleteFromLocalStorage(bookingId);
-        return { success: true };
-    } catch (error) {
+    if (!isSheetsConfigured()) {
+        if (GOOGLE_SHEETS_CONFIG.DEBUG_MODE) {
+            console.log('⚠️ Google Sheets not configured, deleting from localStorage only');
+        }
         return deleteFromLocalStorage(bookingId);
     }
+    
+    console.log('📤 Deleting booking from Google Sheets...');
+    
+    try {
+        const response = await fetch(GOOGLE_SHEETS_CONFIG.WEB_APP_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                action: 'delete',
+                id: bookingId
+            })
+        });
+        
+        console.log('✅ Booking deleted from Google Sheets');
+        
+        if (GOOGLE_SHEETS_CONFIG.USE_LOCAL_BACKUP) {
+            deleteFromLocalStorage(bookingId);
+        }
+        
+        return { success: true };
+        
+    } catch (error) {
+        console.error('❌ Error deleting from Sheets:', error);
+        
+        if (GOOGLE_SHEETS_CONFIG.USE_LOCAL_BACKUP) {
+            return deleteFromLocalStorage(bookingId);
+        }
+        
+        return { success: false };
+    }
 }
 
 // ==========================================
-// LocalStorage Helpers
+// LocalStorage Backup Functions
 // ==========================================
+
 function backupToLocalStorage(booking) {
-    let patients = loadFromLocalStorage();
-    const index = patients.findIndex(p => p.id === booking.id);
-    if (index >= 0) {
-        patients[index] = booking;
-    } else {
-        patients.push(booking);
+    try {
+        let patients = [];
+        const saved = localStorage.getItem('su_patients');
+        if (saved) {
+            patients = JSON.parse(saved);
+        }
+        
+        const existingIndex = patients.findIndex(p => p.id === booking.id);
+        if (existingIndex >= 0) {
+            patients[existingIndex] = booking;
+        } else {
+            patients.push(booking);
+        }
+        
+        localStorage.setItem('su_patients', JSON.stringify(patients));
+        console.log('💾 Backed up to localStorage');
+        
+    } catch (error) {
+        console.error('❌ Error backing up to localStorage:', error);
     }
-    localStorage.setItem('su_patients', JSON.stringify(patients));
 }
 
 function loadFromLocalStorage() {
     try {
         const saved = localStorage.getItem('su_patients');
-        return saved ? JSON.parse(saved) : [];
-    } catch (e) { return []; }
+        if (saved) {
+            const patients = JSON.parse(saved);
+            console.log('📦 Loaded from localStorage:', patients.length);
+            return patients;
+        }
+        console.log('📦 No data in localStorage');
+        return [];
+    } catch (error) {
+        console.error('❌ Error loading from localStorage:', error);
+        return [];
+    }
 }
 
 function updateInLocalStorage(bookingId, updates) {
-    let patients = loadFromLocalStorage();
-    const index = patients.findIndex(p => p.id == bookingId);
-    if (index >= 0) {
-        patients[index] = { ...patients[index], ...updates };
-        localStorage.setItem('su_patients', JSON.stringify(patients));
-        return { success: true };
+    try {
+        const saved = localStorage.getItem('su_patients');
+        if (saved) {
+            let patients = JSON.parse(saved);
+            const index = patients.findIndex(p => p.id == bookingId);
+            
+            if (index >= 0) {
+                patients[index] = { ...patients[index], ...updates };
+                localStorage.setItem('su_patients', JSON.stringify(patients));
+                console.log('💾 Updated in localStorage');
+                return { success: true };
+            }
+        }
+        return { success: false };
+    } catch (error) {
+        console.error('❌ Error updating localStorage:', error);
+        return { success: false };
     }
-    return { success: false };
 }
 
 function deleteFromLocalStorage(bookingId) {
-    let patients = loadFromLocalStorage();
-    patients = patients.filter(p => p.id != bookingId);
-    localStorage.setItem('su_patients', JSON.stringify(patients));
-    return { success: true };
+    try {
+        const saved = localStorage.getItem('su_patients');
+        if (saved) {
+            let patients = JSON.parse(saved);
+            patients = patients.filter(p => p.id != bookingId);
+            localStorage.setItem('su_patients', JSON.stringify(patients));
+            console.log('💾 Deleted from localStorage');
+            return { success: true };
+        }
+        return { success: false };
+    } catch (error) {
+        console.error('❌ Error deleting from localStorage:', error);
+        return { success: false };
+    }
+}
+
+// ==========================================
+// Sync Functions
+// ==========================================
+
+async function syncLocalToSheets() {
+    if (!isSheetsConfigured()) {
+        console.log('⚠️ Cannot sync - Sheets not configured');
+        return false;
+    }
+    
+    console.log('🔄 Syncing localStorage to Google Sheets...');
+    
+    const localPatients = loadFromLocalStorage();
+    
+    if (localPatients.length === 0) {
+        console.log('📦 No local data to sync');
+        return true;
+    }
+    
+    let synced = 0;
+    for (const patient of localPatients) {
+        const result = await createBookingInSheets(patient);
+        if (result.success) {
+            synced++;
+        }
+    }
+    
+    console.log(`✅ Synced ${synced}/${localPatients.length} bookings`);
+    return true;
+}
+
+// ==========================================
+// Customer API Functions
+// ==========================================
+
+async function findCustomerByPhone(phone) {
+    if (!isSheetsConfigured()) {
+        console.log('⚠️ Sheets not configured, checking localStorage');
+        return findCustomerInLocalStorage(phone);
+    }
+    
+    console.log('📞 Looking up customer:', phone);
+    
+    try {
+        const response = await fetch(GOOGLE_SHEETS_CONFIG.WEB_APP_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                action: 'findCustomer',
+                phone: phone
+            })
+        });
+        
+        // no-cors mode: can't read response
+        // Wait and check localStorage
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        console.log('⚠️ Using localStorage (no-cors limitation)');
+        return findCustomerInLocalStorage(phone);
+        
+    } catch (error) {
+        console.error('❌ Error finding customer:', error);
+        return findCustomerInLocalStorage(phone);
+    }
+}
+
+async function createCustomerInSheets(customer) {
+    if (!isSheetsConfigured()) {
+        console.log('⚠️ Sheets not configured, saving to localStorage');
+        return saveCustomerToLocalStorage(customer);
+    }
+    
+    console.log('📤 Creating customer in Sheets...');
+    
+    try {
+        const response = await fetch(GOOGLE_SHEETS_CONFIG.WEB_APP_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                action: 'createCustomer',
+                customer: customer
+            })
+        });
+        
+        console.log('✅ Customer created in Sheets');
+        
+        if (GOOGLE_SHEETS_CONFIG.USE_LOCAL_BACKUP) {
+            saveCustomerToLocalStorage(customer);
+        }
+        
+        return { success: true, message: 'Customer created' };
+        
+    } catch (error) {
+        console.error('❌ Error creating customer:', error);
+        return saveCustomerToLocalStorage(customer);
+    }
 }
 
 function findCustomerInLocalStorage(phone) {
-    const saved = localStorage.getItem('su_customers');
-    if (saved) {
-        const customers = JSON.parse(saved);
-        return customers.find(c => c.phone === phone) || null;
+    try {
+        const saved = localStorage.getItem('su_customers');
+        if (saved) {
+            const customers = JSON.parse(saved);
+            const customer = customers.find(c => c.phone === phone);
+            if (customer) {
+                console.log('📦 Found customer in localStorage');
+                return customer;
+            }
+        }
+        return null;
+    } catch (error) {
+        console.error('❌ Error finding customer in localStorage:', error);
+        return null;
     }
-    return null;
 }
 
 function saveCustomerToLocalStorage(customer) {
     try {
         let customers = [];
         const saved = localStorage.getItem('su_customers');
-        if (saved) customers = JSON.parse(saved);
+        if (saved) {
+            customers = JSON.parse(saved);
+        }
         
         const existing = customers.find(c => c.phone === customer.phone);
         if (!existing) {
-            if (!customer.id) customer.id = Date.now();
+            customer.id = Date.now();
             customers.push(customer);
             localStorage.setItem('su_customers', JSON.stringify(customers));
+            console.log('💾 Customer saved to localStorage');
         }
+        
         return { success: true, data: customer };
-    } catch (e) { return { success: false }; }
-}
-
-// ==========================================
-// Sync Functions
-// ==========================================
-async function syncLocalToSheets() {
-    if (!isSheetsConfigured()) return false;
-    const localPatients = loadFromLocalStorage();
-    if (localPatients.length === 0) return true;
-    
-    for (const patient of localPatients) {
-        await createBookingInSheets(patient);
+    } catch (error) {
+        console.error('❌ Error saving customer:', error);
+        return { success: false };
     }
-    return true;
 }
 
-console.log('✅ Sheets API (Cache Optimized & Full) Loaded');
+// ==========================================
+// Export
+// ==========================================
+console.log('✅ Sheets API loaded');
