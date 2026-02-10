@@ -5,6 +5,7 @@
 // Global Variables
 let patients = [];
 let currentPatient = null;
+let currentPage = 'home'; // Track current page for UI updates
 
 // ========================================
 // Initialize App
@@ -61,6 +62,9 @@ function initNavigation() {
 }
 
 function showPage(pageName) {
+    // Update current page
+    currentPage = pageName;
+    
     // Hide all pages
     document.querySelectorAll('.page').forEach(page => {
         page.classList.remove('active');
@@ -98,20 +102,60 @@ function showPage(pageName) {
 // Local Storage Functions
 // ========================================
 function loadPatients() {
+    console.log('📦 Loading patients...');
+    
+    // Check if Sheets API is available
+    if (typeof readBookingsFromSheets === 'function' && typeof isSheetsConfigured === 'function') {
+        if (isSheetsConfigured()) {
+            console.log('☁️ Loading from Google Sheets...');
+            loadPatientsFromSheets();
+            return;
+        }
+    }
+    
+    // Fallback to localStorage
+    console.log('📦 Loading from localStorage...');
     const saved = localStorage.getItem('su_patients');
     if (saved) {
         patients = JSON.parse(saved);
-        console.log('📦 Loaded patients from localStorage:', patients.length);
+        console.log('✅ Loaded patients from localStorage:', patients.length);
     } else {
-        // No data yet - start with empty array
         patients = [];
-        console.log('📋 No existing patients, starting fresh');
+        console.log('📋 No existing patients');
+    }
+}
+
+async function loadPatientsFromSheets() {
+    try {
+        const data = await readBookingsFromSheets();
+        patients = data || [];
+        console.log('✅ Loaded patients from Sheets:', patients.length);
+        
+        // Update UI if needed
+        if (currentPage === 'patients') {
+            renderPatientsTable();
+        } else if (currentPage === 'calendar') {
+            renderCalendar();
+            renderTodayAppointments();
+        } else if (currentPage === 'home') {
+            updateDashboard();
+        }
+    } catch (error) {
+        console.error('❌ Error loading from Sheets:', error);
+        // Fallback to localStorage
+        const saved = localStorage.getItem('su_patients');
+        if (saved) {
+            patients = JSON.parse(saved);
+        } else {
+            patients = [];
+        }
     }
 }
 
 function savePatients() {
     localStorage.setItem('su_patients', JSON.stringify(patients));
     console.log('✅ Patients saved to localStorage');
+    // Note: Sheets updates happen via updateBookingInSheets() in specific functions
 }
 
 // ========================================
@@ -401,7 +445,16 @@ function updateStatus(newStatus) {
     const patient = patients.find(p => p.id === currentPatient.id);
     if (patient) {
         patient.status = newStatus;
+        
+        // Save to localStorage
         savePatients();
+        
+        // Update in Google Sheets if configured
+        if (typeof updateBookingInSheets === 'function' && typeof isSheetsConfigured === 'function') {
+            if (isSheetsConfigured()) {
+                updateBookingInSheets(patient.id, { status: newStatus });
+            }
+        }
         
         // Send Telegram notification
         sendTelegramNotification(patient, 'status_update');
@@ -436,6 +489,16 @@ function submitCancellation() {
         
         savePatients();
         
+        // Update in Google Sheets if configured
+        if (typeof updateBookingInSheets === 'function' && typeof isSheetsConfigured === 'function') {
+            if (isSheetsConfigured()) {
+                updateBookingInSheets(patient.id, { 
+                    status: 'cancelled',
+                    cancelReason: reason 
+                });
+            }
+        }
+        
         // Send Telegram notification with reason
         sendTelegramNotification(patient, 'cancelled');
         
@@ -466,6 +529,13 @@ function deletePatient(patientId) {
     if (confirmed) {
         patients = patients.filter(p => p.id !== patientId);
         savePatients();
+        
+        // Delete from Google Sheets if configured
+        if (typeof deleteBookingFromSheets === 'function' && typeof isSheetsConfigured === 'function') {
+            if (isSheetsConfigured()) {
+                deleteBookingFromSheets(patientId);
+            }
+        }
         
         renderPatientsTable();
         updateDashboard();
