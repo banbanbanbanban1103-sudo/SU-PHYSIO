@@ -8,7 +8,7 @@ const GOOGLE_SHEETS_CONFIG = {
     
     // Web App URL from Apps Script deployment
     // Format: https://script.google.com/macros/s/AKfycby.../exec
-    WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbxV9RzWhsGNm000f9wY_8tfnt7q1vOJBNiBOz6doxPKCi1RTOGs73p-TLgEkmJ-vywypA/exec',
+    WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbwBZz1_e01U88n-R3ZKzlU4tLh0b45N1wqnP_uAG0upA3GtGX3IvT5NWMx3HdpY47ab/exec',
     
     // Google Sheet ID from the URL
     // Format: 1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms
