@@ -47,18 +47,18 @@ function getTomorrowDate() {
 function normalizePhone(phone) {
     if (!phone) return '';
     
+    // Convert to string first (in case it's a number)
+    const phoneStr = String(phone);
+    
     // Remove all non-digit characters
-    let cleaned = phone.replace(/\D/g, '');
+    let cleaned = phoneStr.replace(/\D/g, '');
     
     // If starts with 95 (country code), remove it
     if (cleaned.startsWith('95') && cleaned.length > 9) {
         cleaned = cleaned.substring(2);
     }
     
-    // Don't modify if already correct length
-    // Myanmar phone: 9 digits (without 0) or 10 digits (with 0)
-    // Just return as-is for flexible matching
-    
+    // Return as-is for flexible matching
     return cleaned;
 }
 
