@@ -45,18 +45,19 @@ function getTomorrowDate() {
 // Helper: Normalize Phone Number
 // ========================================
 function normalizePhone(phone) {
+    if (!phone) return '';
+    
     // Remove all non-digit characters
     let cleaned = phone.replace(/\D/g, '');
     
-    // If starts with 95, remove it (country code)
-    if (cleaned.startsWith('95')) {
+    // If starts with 95 (country code), remove it
+    if (cleaned.startsWith('95') && cleaned.length > 9) {
         cleaned = cleaned.substring(2);
     }
     
-    // If doesn't start with 0, add it
-    if (!cleaned.startsWith('0')) {
-        cleaned = '0' + cleaned;
-    }
+    // Don't modify if already correct length
+    // Myanmar phone: 9 digits (without 0) or 10 digits (with 0)
+    // Just return as-is for flexible matching
     
     return cleaned;
 }
@@ -623,7 +624,7 @@ async function handleCheckStatus() {
         return;
     }
     
-    console.log('🔍 Checking status for:', bookingCode);
+    console.log('🔍 Checking status for:', bookingCode, '/', phone);
     
     // Show loading
     const resultDiv = document.getElementById('status-result');
@@ -635,6 +636,9 @@ async function handleCheckStatus() {
     `;
     resultDiv.classList.remove('hidden');
     
+    // Normalize phone for comparison
+    const phoneDigits = normalizePhone(phone);
+    
     // Try to get latest data from Sheets
     let booking = null;
     
@@ -643,9 +647,22 @@ async function handleCheckStatus() {
             console.log('☁️ Fetching from Google Sheets...');
             try {
                 const bookings = await readBookingsFromSheets();
-                booking = bookings.find(p => 
-                    p.bookingCode === bookingCode && p.phone === phone
-                );
+                console.log('📊 Total bookings:', bookings.length);
+                
+                // Flexible phone matching
+                booking = bookings.find(p => {
+                    const codeMatch = (p.bookingCode || '').toUpperCase() === bookingCode;
+                    
+                    // Compare phone numbers (with or without 0)
+                    const pPhone = normalizePhone(p.phone || '');
+                    const phoneMatch = pPhone === phoneDigits || 
+                                      pPhone === '0' + phoneDigits || 
+                                      '0' + pPhone === phoneDigits;
+                    
+                    console.log(`Checking: ${p.bookingCode} / ${p.phone} -> code:${codeMatch} phone:${phoneMatch}`);
+                    
+                    return codeMatch && phoneMatch;
+                });
                 
                 if (booking) {
                     console.log('✅ Found in Sheets:', booking);
@@ -662,9 +679,17 @@ async function handleCheckStatus() {
         const saved = localStorage.getItem('su_patients');
         if (saved) {
             const patients = JSON.parse(saved);
-            booking = patients.find(p => 
-                p.bookingCode === bookingCode && p.phone === phone
-            );
+            
+            booking = patients.find(p => {
+                const codeMatch = (p.bookingCode || '').toUpperCase() === bookingCode;
+                
+                const pPhone = normalizePhone(p.phone || '');
+                const phoneMatch = pPhone === phoneDigits || 
+                                  pPhone === '0' + phoneDigits || 
+                                  '0' + pPhone === phoneDigits;
+                
+                return codeMatch && phoneMatch;
+            });
         }
     }
     
